@@ -37,20 +37,20 @@ export type TmpFs = SMUnitString | ITmpFsConfig | ITmpFsConfig[];
 export type Volume = string[] | IVolumeConfig | IVolumeConfig[];
 export type Port = string[] | (string | IPortConfig)[];
 
-interface IPortConfig {
+export interface IPortConfig {
 	target: number;
 	published: number;
 	protocol: string;
 	mode: string;
 }
-interface ITmpFsConfig {
+export interface ITmpFsConfig {
 	type: string;
 	target: string;
 	tmpfs: {
 		size: number;
 	};
 }
-interface INetworkConfig {
+export interface INetworkConfig {
 	[key: string]: {
 		driver: string;
 		external: boolean | { name: string };
@@ -66,7 +66,7 @@ interface INetworkConfig {
 		labels: SMUnitString;
 	};
 }
-interface IVolumeConfig {
+export interface IVolumeConfig {
 	type: string;
 	source?: string;
 	volume?: {
@@ -84,7 +84,7 @@ interface IVolumeConfig {
 	cached?: string;
 	volumes?: IComposeGeneric;
 }
-interface IServiceUlimits {
+export interface IServiceUlimits {
 	nproc?: number;
 	nofile?: {
 		soft?: number;
@@ -95,25 +95,25 @@ export interface IDockerComposeConfig {
 	format?: string;
 }
 
-interface IDeployResources {
+export interface IDeployResources {
 	limits?: IComposeGeneric;
 	reservations?: IComposeGeneric;
 }
 
-interface IDeployPlacement {
+export interface IDeployPlacement {
 	constraints?: SMUnitString;
 	preferences?: IComposeGeneric[];
 	max_replicas_per_node?: number;
 }
 
-interface IDeployRestart {
+export interface IDeployRestart {
 	condition?: string;
 	delay?: string;
 	max_attempts?: number;
 	window?: string;
 }
 
-interface IDeploy {
+export interface IDeploy {
 	endpoint_mode?: string;
 	labels?: IComposeGeneric | SMUnitString;
 	mode?: string;
@@ -125,11 +125,11 @@ interface IDeploy {
 	update_config?: IUpdateConfig;
 }
 
-interface IComposeGeneric {
+export interface IComposeGeneric {
 	[key: string]: unknown;
 }
 
-interface IDockerComposeBuild {
+export interface IDockerComposeBuild {
 	context?: string;
 	dockerfile?: string;
 	args?: IComposeGeneric | string[];
@@ -140,7 +140,7 @@ interface IDockerComposeBuild {
 	target?: string;
 }
 
-interface IConfig {
+export interface IConfig {
 	source: string;
 	target: string;
 	uid: string;
@@ -148,7 +148,7 @@ interface IConfig {
 	mode: string;
 }
 
-interface IRollbackConfig {
+export interface IRollbackConfig {
 	parallelism?: number;
 	delay?: string;
 	failure_action?: string; //default || pause
@@ -157,7 +157,7 @@ interface IRollbackConfig {
 	order?: string; // (default stop-first).
 }
 
-interface IUpdateConfig {
+export interface IUpdateConfig {
 	parallelism?: number;
 	delay?: string;
 	failure_action?: string; //default || pause
@@ -166,7 +166,7 @@ interface IUpdateConfig {
 	order?: string; // (default stop-first).
 }
 
-interface ISwarmDeploy {
+export interface ISwarmDeploy {
 	replicas: number;
 	placement: {
 		max_replicas_per_node: number;
@@ -190,11 +190,11 @@ interface ISwarmDeploy {
 	update_config: IUpdateConfig;
 }
 
-interface ILogging {
+export interface ILogging {
 	driver: string;
 	options: IComposeGeneric;
 }
-interface IServiceHealthCheck {
+export interface IServiceHealthCheck {
 	test?: SMUnitString;
 	interval?: string;
 	timeout?: string;
@@ -203,13 +203,13 @@ interface IServiceHealthCheck {
 	disable?: boolean;
 }
 
-interface IDriverOpts {
+export interface IDriverOpts {
 	type: string;
 	o: string;
 	device: string;
 }
 
-interface IServiceConfig {
+export interface IServiceConfig {
 	driver_opts?: IDriverOpts;
 	driver?: string;
 	image?: string;
@@ -263,18 +263,18 @@ interface IServiceConfig {
 	userns_mode?: string;
 }
 
-interface IDockerComposePack {
+export interface IDockerComposePack {
 	version: string;
 	services: IServiceConfig[];
 }
 
 export type ServiceConfig = Record<string, unknown>;
 
-interface ServiceKeyConfig {
+export interface ServiceKeyConfig {
 	key: string;
 	c: IServiceConfig;
 }
-interface BuildConfig {
+export interface BuildConfig {
 	service: string;
 	c: IDockerComposeBuild;
 }
@@ -322,7 +322,7 @@ export interface ISetOpts {
 	command?: { service?: string; data: SMUnitString };
 }
 
-interface ComposeBase {
+export interface ComposeBase {
 	service?: string;
 	// Don't print unknownthing to STDOUT q or quiet
 	q?: boolean;
@@ -330,7 +330,7 @@ interface ComposeBase {
 	file?: string;
 	f?: string;
 }
-interface ComposeBuild extends ComposeBase {
+export interface ComposeBuild extends ComposeBase {
 	//key=val     Set build-time variables for services
 	service?: string;
 	['build-arg']?: string;
@@ -358,7 +358,7 @@ interface ComposeBuild extends ComposeBase {
 	pull?: boolean;
 }
 
-interface ComposeConfig extends ComposeBase {
+export interface ComposeConfig extends ComposeBase {
 	// Pin image tags to digests
 	['resolve-image-digests']?: boolean;
 	// Don't interpolate environment variables
@@ -375,20 +375,8 @@ interface ComposeConfig extends ComposeBase {
      */
 	hash?: string;
 }
-interface ComposeCreate extends ComposeBase {
-	//Recreate containers even if their configuration and
-	//image haven't changed. Incompatible with --no-recreate.
-	['force-recreate']?: boolean;
-	// If containers already exist, don't recreate them.
-	// Incompatible with --force-recreate
-	['no-recreate']?: boolean;
-	// Don't build an image, even if it's missing.
-	['no-build']?: boolean;
-	// Build images before creating containers
-	build?: boolean;
-}
 
-interface ComposeDown extends ComposeBase {
+export interface ComposeDown extends ComposeBase {
 	/*
        type
        Remove images. Type must be one of:
@@ -417,13 +405,13 @@ interface ComposeDown extends ComposeBase {
 	timeout?: number;
 }
 
-interface ComposeEvent {
+export interface ComposeEvent {
 	service?: string;
 	// json file
 	json?: string;
 }
 
-interface ComposeExec {
+export interface ComposeExec {
 	service?: string;
 	/*
         Detached mode: Run command in the background.
@@ -458,7 +446,7 @@ interface ComposeExec {
 }
 type ComposeImage = ComposeBase;
 
-interface ComposeKill {
+export interface ComposeKill {
 	service?: string;
 	/*
       SIGNAL
@@ -468,7 +456,7 @@ interface ComposeKill {
 	s?: string | number;
 }
 
-interface ComposeLog {
+export interface ComposeLog {
 	service?: string;
 	// Produce monochrome output.
 	['no-color']?: boolean;
@@ -486,11 +474,11 @@ interface ComposeLog {
 	tail?: string;
 }
 
-interface ComposePause {
+export interface ComposePause {
 	service?: string;
 }
 
-interface ComposePort {
+export interface ComposePort {
 	service?: string;
 	/*
        --protocol=proto  tcp or udp [default: tcp]
@@ -502,7 +490,7 @@ interface ComposePort {
     */
 	index?: number;
 }
-interface ComposePs extends ComposeBase {
+export interface ComposePs extends ComposeBase {
 	// Display services
 	services?: boolean;
 	// KEY=VAL     Filter services by a property        //
@@ -512,7 +500,7 @@ interface ComposePs extends ComposeBase {
 	all?: boolean;
 }
 
-interface ComposePull extends ComposeBase {
+export interface ComposePull extends ComposeBase {
 	// Pull what it can and ignores images with pull failures.
 	['ignore-pull-failures']?: boolean;
 	// Deprecated, pull multiple images in parallel (enabled by default).
@@ -523,13 +511,13 @@ interface ComposePull extends ComposeBase {
 	['include-deps']?: boolean;
 }
 
-interface ComposePush {
+export interface ComposePush {
 	service?: string;
 	// Push what it can and ignores images with push failures
 	['ignore-push-failures']?: boolean;
 }
 
-interface ComposeRestart {
+export interface ComposeRestart {
 	/*
       TIMEOUT Specify a shutdown timeout in seconds.
       (default: 10)
@@ -538,7 +526,7 @@ interface ComposeRestart {
 	timeout?: number;
 }
 
-interface ComposeRm {
+export interface ComposeRm {
 	// Don't ask to confirm removal
 	f?: boolean;
 	force?: boolean;
@@ -552,7 +540,7 @@ interface ComposeRm {
 	all?: boolean;
 }
 
-interface ComposeRun {
+export interface ComposeRun {
 	/*
        Detached mode: Run container in the background, print
        new container name.
@@ -620,7 +608,7 @@ interface ComposeRun {
 	args?: string[];
 }
 
-interface ComposeScale {
+export interface ComposeScale {
 	/*
       TIMEOUT
       Specify a shutdown timeout in seconds.
@@ -631,11 +619,11 @@ interface ComposeScale {
 	serviceArray?: string[];
 }
 
-interface ComposeStart {
+export interface ComposeStart {
 	service: string;
 }
 
-interface ComposeStop {
+export interface ComposeStop {
 	service: string;
 	/*
        TIMEOUT      Specify a shutdown timeout in seconds.
@@ -645,13 +633,13 @@ interface ComposeStop {
 	timeout?: number;
 }
 
-interface ComposeTop {
+export interface ComposeTop {
 	service: string;
 }
 
 export type ComposeUnPause = Record<string, unknown>;
 
-interface ComposeUp {
+export interface ComposeUp {
 	/*
        Detached mode: Run containers in the background,
        print new container names. Incompatible with
@@ -812,14 +800,7 @@ export class DockerCompose extends Commander {
 		const target = 'config';
 		return this.runCompose(target, opts);
 	}
-	/**
-	 * @description Create services
-	 * @param opts {ComposeCreate}
-	 * */
-	async composeCreate(opts?: ComposeCreate) {
-		const target = 'create';
-		return this.runCompose(target, opts);
-	}
+
 	/**
 	 * @description Stop and remove containers, networks, images, and volumes
 	 * @param opts {ComposeDown}
@@ -977,8 +958,6 @@ export class DockerCompose extends Commander {
 	 * @param opts {ComposeUp}
 	 */
 	async composeUp(opts?: ComposeUp) {
-		const args = { build: true, d: true };
-		opts = { ...opts, ...args };
 		const target = 'up';
 		return this.runCompose(target, opts);
 	}
@@ -993,10 +972,7 @@ export class DockerCompose extends Commander {
 	 * @param remotePath {string} remote file path for services
 	 * @returns {Promise<boolean>}
 	 */
-	async toFile(
-		path = 'docker-compose.yaml',
-		remotePath = 'docker-compose.yaml'
-	) {
+	async toFile(path = 'docker-compose.yaml', remotePath = path) {
 		const version = this._version;
 		const services: Record<string, unknown> = {};
 		const skeys = Array.from(this._services.keys());
@@ -1005,7 +981,7 @@ export class DockerCompose extends Commander {
 		const data = { version, services };
 		const filedata = YAML.stringify(data);
 		return new Promise((rs, rj) => {
-			writeFile(`${path}/docker-compose.yaml`, filedata, async (e) => {
+			writeFile(`docker-compose.yaml`, filedata, async (e) => {
 				if (e) rj(e);
 				else rs(true);
 				// if (remotePath && this.sshConfig) {

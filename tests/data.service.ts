@@ -1,3 +1,5 @@
+import { ComposeUp } from '../src';
+
 // import { Commander } from '../src/commander';
 export const SDATA = [
 	{
@@ -461,12 +463,13 @@ export const TopConfig = {
 export const UnPauseConfig = {
 	service: 'db',
 };
-export const UpConfig = {
+export const UpConfig: ComposeUp = {
 	scale: 'web=2 cadvisor=1',
 	'remove-orphans': true,
 	'no-build': true,
 	'no-color': true,
 	'exit-code-from': 'web',
+	detach: false,
 };
 export const ScaleConfig = {
 	t: 10,

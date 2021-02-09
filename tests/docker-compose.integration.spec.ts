@@ -43,13 +43,9 @@ import {
 	VolumesArr,
 	CommandArr,
 	isolation,
-	PauseConfig,
-	RmConfig,
-	StartConfig,
-	StopConfig,
-	UpConfig,
 } from './data.service';
 import { StrArrtoObj } from '../src/util';
+import { it, describe } from 'mocha';
 // import { doesNotMatch } from 'assert';
 
 describe('docker-compose api unit tests', () => {
@@ -73,7 +69,7 @@ describe('docker-compose api unit tests', () => {
 		expect(dc.getCapDrop(srvc)).toMatchObject(CapDropArr);
 		expect(dc.getContainerName(srvc)).toBe(conf.container_name.data);
 	});
-	it('#2 Integration tests with chaining', () => {
+	it('#2 Integration tests with chaining', function () {
 		const srvc = 's13';
 		dc.setCurrentService(srvc)
 			.setBuild({ data: serviceBuild })
@@ -161,7 +157,8 @@ describe('docker-compose api unit tests', () => {
 		expect(dc.getConfig(srvc)).toBe(ConfigsShort);
 		expect(dc.getIsolation(srvc)).toBe(isolation[0]);
 	});
-	it('#3 Integration tests with setters to build, create, and remove', async () => {
+	it('#3 Integration tests with setters to build, create, and remove', async function () {
+		this.timeout(10000);
 		dc.DockerFile.setPath('tests/docker/zlog-compose/Dockerfile')
 			.setFrom('python:3')
 			.setEnv('PYTHONUNBUFFERED 1')
@@ -199,12 +196,14 @@ describe('docker-compose api unit tests', () => {
 		expect(toFile).toBeTruthy();
 		const build = await dc.composeBuild();
 		expect(build.join('\n').includes('Successfully built')).toBeTruthy();
-		const create = await dc.composeCreate();
-		// const start = await dc.composeStart({ service: 'db' });
-		// const stop = await dc.composeStart({ service: 'db' });
-		// const rm = await dc.composeRm();
+
+		const create = await dc.composeUp({ detach: true });
 		console.log('create ------> ', create);
+
+		const down = await dc.composeDown({ v: true });
+		console.log('down ------> ', down);
 	});
+
 	it('#4 Integration tests with toFile with simple set', async () => {
 		const srvc = 's12';
 		const conf: ISetOpts = {
@@ -218,17 +217,5 @@ describe('docker-compose api unit tests', () => {
 		dc.set(srvc, conf);
 		const rsponse = await dc.toFile();
 		expect(rsponse).toBeTruthy();
-	});
-	// create, start, stop, remove
-	it('#5 check docker-compose flow', async () => {
-		const df1 = await dc.composeCreate();
-		await dc.composeStart(StartConfig);
-		await dc.composeStop(StopConfig);
-		await dc.composeStart(StartConfig);
-		await dc.composePause(PauseConfig);
-		const df6 = await dc.composeRm(RmConfig);
-		await dc.composeUp(UpConfig);
-		expect(df1.length > 0).toBeTruthy();
-		expect(df6).toMatchObject(['Going to remove zlog-compose_web_1']);
 	});
 });

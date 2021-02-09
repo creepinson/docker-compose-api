@@ -16,8 +16,7 @@ const RUNArray = ['cat syslog', 'more syslog'];
 const CPYStr = 'requirements.txt /code/';
 const CPYArr = ['. /code/', 'syslog syslog.1'];
 // const AddStr = 'hom* /mydir/';
-// const AddArr = ['test.txt relativeDir/', 'test.txt /absoluteDir/'];
-
+// const AddArr = ['test.txt r(
 // const EnvStr = 'myName John Doe';
 // const EnvArr = [
 //   'myDog Rex The Dog',

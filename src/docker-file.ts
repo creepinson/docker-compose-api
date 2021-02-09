@@ -295,15 +295,20 @@ class DockerFile {
 		});
 		return this;
 	}
-	toFile() {
+
+	toString() {
 		const cmds = Object.keys(this.order).sort(
 			(a, b) => parseInt(a) - parseInt(b)
 		);
 		const data = cmds.map(
 			(c: string) => `${this.order[c].key} ${this.order[c].value}`
 		);
+		return data.join('\n');
+	}
+
+	toFile() {
 		return new Promise((rs, rj) =>
-			writeFile(this.fp, data.join('\n'), (e) => {
+			writeFile(this.fp, this.toString(), (e) => {
 				if (!e) {
 					this.order = {};
 				}
